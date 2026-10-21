@@ -1,0 +1,6 @@
+{
+  "name": "SpotiZip - Spotify Playlist Downloader",
+  "description": "Download any Spotify playlist with link search, track preview, and instant ZIP archive bundling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
