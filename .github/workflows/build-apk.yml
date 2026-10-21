@@ -1,0 +1,23 @@
+
+name: Build Spotizip APK
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Android APK
+        uses: cemcoe/web-to-apk-action@v1
+        with:
+          app_name: "Spotizip"
+          app_id: "com.keeish.spotizip"
+          build_command: "npm install && npm run build"
+          web_dir: "dist"
