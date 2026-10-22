@@ -26,7 +26,6 @@ jobs:
       - name: Build Web App
         run: npm run build
 
-      # FIX: Use capacitor.config.json to prevent the CommonJS / TypeScript parsing error
       - name: Setup Capacitor
         run: |
           npm install @capacitor/core @capacitor/android @capacitor/cli --legacy-peer-deps
@@ -41,11 +40,12 @@ jobs:
           npx cap add android || true
           npx cap sync android
 
+      # FIX: Use Java 21 required by the latest Capacitor Android SDK
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Build APK with Gradle
         run: |
