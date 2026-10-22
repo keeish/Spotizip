@@ -18,39 +18,41 @@ jobs:
         with:
           node-version: 20
 
-      # 1. FIX: Remove lockfile and install with --legacy-peer-deps to prevent the edgesOut crash
       - name: Install Dependencies
         run: |
           rm -f package-lock.json
           npm install --legacy-peer-deps
 
-      # 2. Build the web app
       - name: Build Web App
         run: npm run build
 
-      # 3. Install and setup Capacitor for Android
-      - name: Install Capacitor
+      # FIX: Use capacitor.config.json to prevent the CommonJS / TypeScript parsing error
+      - name: Setup Capacitor
         run: |
           npm install @capacitor/core @capacitor/android @capacitor/cli --legacy-peer-deps
-          npx cap init SpotiZip com.spotizip.app --web-dir dist || true
+          rm -f capacitor.config.ts
+          cat << 'EOF' > capacitor.config.json
+          {
+            "appId": "com.spotizip.app",
+            "appName": "SpotiZip",
+            "webDir": "dist"
+          }
+          EOF
           npx cap add android || true
           npx cap sync android
 
-      # 4. Set up Java JDK 17 for Android Gradle
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      # 5. Build the Debug APK
       - name: Build APK with Gradle
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
-      # 6. Upload the generated APK as an artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
