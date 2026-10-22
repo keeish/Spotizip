@@ -1,28 +1,56 @@
 name: Build Android APK
+
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-      - run: npm run build
-      - run: npx cap add android || true
-      - run: npx cap sync android
-      - uses: actions/setup-java@v4
+
+      # 1. FIX: Remove lockfile and install with --legacy-peer-deps to prevent the edgesOut crash
+      - name: Install Dependencies
+        run: |
+          rm -f package-lock.json
+          npm install --legacy-peer-deps
+
+      # 2. Build the web app
+      - name: Build Web App
+        run: npm run build
+
+      # 3. Install and setup Capacitor for Android
+      - name: Install Capacitor
+        run: |
+          npm install @capacitor/core @capacitor/android @capacitor/cli --legacy-peer-deps
+          npx cap init SpotiZip com.spotizip.app --web-dir dist || true
+          npx cap add android || true
+          npx cap sync android
+
+      # 4. Set up Java JDK 17 for Android Gradle
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
+
+      # 5. Build the Debug APK
       - name: Build APK with Gradle
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
+
+      # 6. Upload the generated APK as an artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
