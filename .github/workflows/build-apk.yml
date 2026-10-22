@@ -1,23 +1,30 @@
-
-name: Build Spotizip APK
-
+name: Build Android APK
 on:
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
+  push:
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Build Android APK
-        uses: cemcoe/web-to-apk-action@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          app_name: "Spotizip"
-          app_id: "com.keeish.spotizip"
-          build_command: "npm install && npm run build"
-          web_dir: "dist"
+          node-version: 20
+      - run: npm install
+      - run: npm run build
+      - run: npx cap add android || true
+      - run: npx cap sync android
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Build APK with Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpotiZip-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
