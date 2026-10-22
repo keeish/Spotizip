@@ -26,6 +26,7 @@ jobs:
       - name: Build Web App
         run: npm run build
 
+      # FIX: Configure Capacitor to connect to the live cloud backend & allow network requests
       - name: Setup Capacitor
         run: |
           npm install @capacitor/core @capacitor/android @capacitor/cli --legacy-peer-deps
@@ -34,19 +35,23 @@ jobs:
           {
             "appId": "com.spotizip.app",
             "appName": "SpotiZip",
-            "webDir": "dist"
+            "webDir": "dist",
+            "server": {
+              "url": "https://ais-pre-v65lr33j57wu7v2e4yj6ns-949234535905.asia-southeast1.run.app",
+              "cleartext": true
+            }
           }
           EOF
           npx cap add android || true
           npx cap sync android
 
-      - name: Set up Java
+      - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '21'
 
-      # FIX: Exclude legacy kotlin-stdlib-jdk7/8 to resolve duplicate classes
+      # Fix legacy Kotlin duplicate classes
       - name: Fix Duplicate Kotlin Classes
         run: |
           cat << 'EOF' >> android/app/build.gradle
@@ -56,6 +61,11 @@ jobs:
               exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
           }
           EOF
+
+      # Ensure Android INTERNET permission is enabled
+      - name: Add Android Internet Permissions
+        run: |
+          sed -i '/<application/i <uses-permission android:name="android.permission.INTERNET" />' android/app/src/main/AndroidManifest.xml || true
 
       - name: Build APK with Gradle
         run: |
