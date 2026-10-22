@@ -40,12 +40,22 @@ jobs:
           npx cap add android || true
           npx cap sync android
 
-      # FIX: Use Java 21 required by the latest Capacitor Android SDK
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '21'
+
+      # FIX: Exclude legacy kotlin-stdlib-jdk7/8 to resolve duplicate classes
+      - name: Fix Duplicate Kotlin Classes
+        run: |
+          cat << 'EOF' >> android/app/build.gradle
+
+          configurations.all {
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+          }
+          EOF
 
       - name: Build APK with Gradle
         run: |
