@@ -1,0 +1,19 @@
+{
+  "name": "SpotiZip - Spotify Playlist Downloader",
+  "short_name": "SpotiZip",
+  "description": "Download any Spotify playlist with link search, track preview, and instant ZIP archive bundling.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#080b11",
+  "theme_color": "#080b11",
+  "categories": ["music", "utilities", "entertainment"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

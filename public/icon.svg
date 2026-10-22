@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#14b8a6" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="#080b11" />
+  <rect x="32" y="32" width="448" height="448" rx="100" fill="url(#bg)" />
+  <!-- Folder Archive and Music Icon -->
+  <g filter="url(#shadow)" fill="#090d14">
+    <!-- Folder shape -->
+    <path d="M120 160 C120 142, 134 128, 152 128 L220 128 C232 128, 244 136, 250 146 L266 172 C272 182, 284 190, 296 190 L360 190 C378 190, 392 204, 392 222 L392 344 C392 362, 378 376, 360 376 L152 376 C134 376, 120 362, 120 344 Z" />
+  </g>
+  <!-- Inner Music Note / ZIP icon -->
+  <path d="M220 280 C220 266, 231 255, 245 255 L285 255 L285 300 C285 315, 272 328, 255 328 C238 328, 225 315, 225 298 Z" fill="#10b981"/>
+  <path d="M285 255 L285 220 L320 220 L320 255 Z" fill="#10b981"/>
+</svg>

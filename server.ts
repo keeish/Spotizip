@@ -11,6 +11,17 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json());
 
+// Enable global CORS for mobile apps and external web origins
+app.use((_req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+  if (_req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Extract Spotify playlist ID from varied URL formats
 function extractPlaylistId(input: string): string | null {
   if (!input) return null;
